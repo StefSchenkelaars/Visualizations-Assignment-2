@@ -74,15 +74,37 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
             return 0;
         }
     }
-
-    void slicer(double[] viewMatrix) {
-
-        // clear image
+    
+    private void clearImage() {
         for (int j = 0; j < image.getHeight(); j++) {
             for (int i = 0; i < image.getWidth(); i++) {
                 image.setRGB(i, j, 0);
             }
         }
+    }
+    
+    void mip(double[] viewMatrix) {
+
+        clearImage();
+        
+        for (int j = 0; j < image.getHeight(); j++) {
+            for (int i = 0; i < image.getWidth(); i++) {
+                // BufferedImage expects a pixel color packed as ARGB in an int
+                int c_alpha = 255;
+                int c_red = 255;
+                int c_green = 255;
+                int c_blue = 0;
+                int pixelColor = (c_alpha << 24) | (c_red << 16) | (c_green << 8) | c_blue;
+                image.setRGB(i, j, pixelColor);
+            }
+        }
+
+
+    }
+    
+    void slicer(double[] viewMatrix) {
+
+        clearImage();
 
         // vector uVec and vVec define a plane through the origin, 
         // perpendicular to the view vector viewVec
@@ -190,7 +212,6 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
     @Override
     public void visualize(GL2 gl) {
 
-
         if (volume == null) {
             return;
         }
@@ -200,7 +221,15 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
         gl.glGetDoublev(GL2.GL_MODELVIEW_MATRIX, viewMatrix, 0);
 
         long startTime = System.currentTimeMillis();
-        slicer(viewMatrix);
+        
+        String castType = panel.getCastType();
+        if (castType == "Slicer"){
+            slicer(viewMatrix);
+        } else if (castType == "MIP"){
+            mip(viewMatrix);
+        }
+        
+        
         long endTime = System.currentTimeMillis();
         double runningTime = (endTime - startTime);
         panel.setSpeedLabel(Double.toString(runningTime));
