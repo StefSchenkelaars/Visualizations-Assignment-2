@@ -83,18 +83,72 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
         }
     }
     
+    private int toARGB(int alpha, int red, int green, int blue){
+        return (alpha << 24) | (red << 16) | (green << 8) | blue;
+    }
+    
     void mip(double[] viewMatrix) {
 
         clearImage();
         
+        // vector uVec and vVec define a plane through the origin, 
+        // perpendicular to the view vector viewVec
+        double[] viewVec = new double[3];
+        double[] uVec = new double[3];
+        double[] vVec = new double[3];
+        VectorMath.setVector(viewVec, viewMatrix[2], viewMatrix[6], viewMatrix[10]);
+        VectorMath.setVector(uVec, viewMatrix[0], viewMatrix[4], viewMatrix[8]);
+        VectorMath.setVector(vVec, viewMatrix[1], viewMatrix[5], viewMatrix[9]);
+        
+       // image is square
+        int imageCenter = image.getWidth() / 2;
+
+        double[] pixelCoord = new double[3];
+        double[] volumeCenter = new double[3];
+        VectorMath.setVector(volumeCenter, volume.getDimX() / 2, volume.getDimY() / 2, volume.getDimZ() / 2);
+
+        // sample on a plane through the origin of the volume data
+        double max = volume.getMaximum();
         for (int j = 0; j < image.getHeight(); j++) {
             for (int i = 0; i < image.getWidth(); i++) {
+                
+                // Default value is 0
+                int val = 0;
+
+                // Loop through the viewVector
+                // First calculate where the volume stops
+                int maxZIndex = Integer.MAX_VALUE;
+                for(int xyz = 0; xyz <= 2; xyz++){
+                    if (viewVec[xyz] != 0.0){
+                        int temp =(int) Math.floor((uVec[xyz] * (imageCenter - i) + vVec[xyz] * (imageCenter - j) - volumeCenter[2]) / viewVec[xyz]);
+                        if (temp < maxZIndex){
+                            maxZIndex = temp;
+                        }
+                    }
+                }
+                
+//                System.out.println("Zindex: " + maxZIndex);
+//                for(int xyz = 0; xyz <= 2; xyz++){
+//                    double weg = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * maxZIndex + volumeCenter[xyz];
+//                    System.out.println("Coord: " + xyz + " : " + weg);
+//                }
+                
+                for (int k = - maxZIndex; k < maxZIndex; k += 10) {
+                    for(int xyz = 0; xyz <= 2; xyz++){
+                        pixelCoord[xyz] = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * k + volumeCenter[xyz];     
+                    }
+                    
+                    int tempVal = getVoxel(pixelCoord);
+                    if (tempVal > val){
+                        val = tempVal;
+                    }
+                }
+                
+                // Normalize to max
+                val = (int) Math.floor(val/max * 255);
+                
                 // BufferedImage expects a pixel color packed as ARGB in an int
-                int c_alpha = 255;
-                int c_red = 255;
-                int c_green = 255;
-                int c_blue = 0;
-                int pixelColor = (c_alpha << 24) | (c_red << 16) | (c_green << 8) | c_blue;
+                int pixelColor = toARGB(255, val, val, val);
                 image.setRGB(i, j, pixelColor);
             }
         }
@@ -132,17 +186,19 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                         + volumeCenter[1];
                 pixelCoord[2] = uVec[2] * (i - imageCenter) + vVec[2] * (j - imageCenter)
                         + volumeCenter[2];
-
+                
                 int val = getVoxel(pixelCoord);
                 // Apply the transfer function to obtain a color
                 TFColor voxelColor = tFunc.getColor(val);
+                
+                System.out.println("Pixel cord: " + pixelCoord[0] + ", " + pixelCoord[1] + ", " + pixelCoord[2] + " Val: " + val);
                 
                 // BufferedImage expects a pixel color packed as ARGB in an int
                 int c_alpha = voxelColor.a <= 1.0 ? (int) Math.floor(voxelColor.a * 255) : 255;
                 int c_red = voxelColor.r <= 1.0 ? (int) Math.floor(voxelColor.r * 255) : 255;
                 int c_green = voxelColor.g <= 1.0 ? (int) Math.floor(voxelColor.g * 255) : 255;
                 int c_blue = voxelColor.b <= 1.0 ? (int) Math.floor(voxelColor.b * 255) : 255;
-                int pixelColor = (c_alpha << 24) | (c_red << 16) | (c_green << 8) | c_blue;
+                int pixelColor = toARGB(c_alpha, c_red, c_green, c_blue);
                 image.setRGB(i, j, pixelColor);
             }
         }
