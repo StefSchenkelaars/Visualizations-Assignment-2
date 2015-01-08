@@ -26,7 +26,7 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     }
     
     public String getCastType() {
-        return castTypeList.getSelectedValue().toString();
+        return castTypeList.getSelectedItem().toString();
     }
 
     public void setSpeedLabel(String text) {
@@ -54,20 +54,12 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         renderingSpeedLabel = new javax.swing.JLabel();
-        castTypeList = new javax.swing.JList();
         tfPanel = new javax.swing.JPanel();
+        castTypeList = new javax.swing.JComboBox();
 
         jLabel1.setText("Rendering time (ms):");
 
         renderingSpeedLabel.setText("jLabel2");
-
-        castTypeList.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Slicer", "MIP" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        castTypeList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        castTypeList.setSelectedIndex(1);
 
         javax.swing.GroupLayout tfPanelLayout = new javax.swing.GroupLayout(tfPanel);
         tfPanel.setLayout(tfPanelLayout);
@@ -77,8 +69,11 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         );
         tfPanelLayout.setVerticalGroup(
             tfPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 313, Short.MAX_VALUE)
+            .addGap(0, 322, Short.MAX_VALUE)
         );
+
+        castTypeList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Slicer", "MIP", "Compositing" }));
+        castTypeList.setName("castTypeList"); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -90,25 +85,23 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(renderingSpeedLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(tfPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(renderingSpeedLabel)))
-                    .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(renderingSpeedLabel)
+                    .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
                 .addComponent(tfPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JList castTypeList;
+    private javax.swing.JComboBox castTypeList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel renderingSpeedLabel;
     private javax.swing.JPanel tfPanel;
