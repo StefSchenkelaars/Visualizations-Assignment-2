@@ -72,8 +72,13 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
             .addGap(0, 322, Short.MAX_VALUE)
         );
 
-        castTypeList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Slicer", "MIP", "Compositing" }));
+        castTypeList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MIP", "Slicer", "Compositing" }));
         castTypeList.setName("castTypeList"); // NOI18N
+        castTypeList.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                castTypeListActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -100,6 +105,11 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                 .addComponent(tfPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void castTypeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_castTypeListActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_castTypeListActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox castTypeList;
     private javax.swing.JLabel jLabel1;

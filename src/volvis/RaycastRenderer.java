@@ -53,8 +53,8 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 
     @Override
     public void changed() {
-        for (int i = 0; i < listeners.size(); i++) {
-            listeners.get(i).changed();
+        for (TFChangeListener listener : listeners) {
+            listener.changed();
         }
     }
 
@@ -75,6 +75,48 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
         } else {
             return 0;
         }
+    }
+    
+    short getTriLinear(double[] coord) {
+        int dim = 1;
+        
+        // Check if entire volume (dim * dim) lies inside volume
+        if (( coord[0] >= dim) && (coord[0] + dim < volume.getDimX()) &&
+            ( coord[1] >= dim) && (coord[1] + dim < volume.getDimY()) &&
+            ( coord[2] >= dim) && (coord[2] + dim < volume.getDimZ())){
+             
+            // This method is from wikipedia Trilinear_interpolation
+            // Calculate lattice points
+            int x0 = (int) Math.floor(coord[0]);
+            int x1 = x0 + 1;
+            int y0 = (int) Math.floor(coord[1]);
+            int y1 = y0 + 1;
+            int z0 = (int) Math.floor(coord[2]);
+            int z1 = z0 + 1;
+            
+            // Calculate distance to lattice points
+            double xd = (coord[0] - x0)/(x1 - x0);
+            double yd = (coord[1] - y0)/(y1 - y0);
+            double zd = (coord[2] - z0)/(z1 - z0);
+            
+            // Interpolate along x
+            double c00 = volume.getVoxel(x0, y0, z0) * (1 - xd) + volume.getVoxel(x1, y0, z0) * xd;
+            double c10 = volume.getVoxel(x0, y1, z0) * (1 - xd) + volume.getVoxel(x1, y1, z0) * xd;
+            double c01 = volume.getVoxel(x0, y0, z1) * (1 - xd) + volume.getVoxel(x1, y0, z1) * xd;
+            double c11 = volume.getVoxel(x0, y1, z1) * (1 - xd) + volume.getVoxel(x1, y1, z1) * xd;
+            
+            // Interpolate along y
+            double c0 = c00 * (1 - yd) + c10 * yd;
+            double c1 = c01 * (1 - yd) + c11 * yd;
+            
+            // Interpolate along z and return
+            return (short) (c0 * (1 - zd) + c1 * zd);
+            
+        } else {
+            return 0;
+        }
+            
+        
     }
     
     private void clearImage() {
@@ -102,7 +144,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
         VectorMath.setVector(uVec, viewMatrix[0], viewMatrix[4], viewMatrix[8]);
         VectorMath.setVector(vVec, viewMatrix[1], viewMatrix[5], viewMatrix[9]);
         
-       // image is square
+        // image is square
         int imageCenter = image.getWidth() / 2;
 
         double[] pixelCoord = new double[3];
@@ -122,7 +164,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 int maxZIndex = Integer.MAX_VALUE;
                 for(int xyz = 0; xyz <= 2; xyz++){
                     if (viewVec[xyz] != 0.0){
-                        int temp =(int) Math.floor((uVec[xyz] * (imageCenter - i) + vVec[xyz] * (imageCenter - j) - volumeCenter[2]) / viewVec[xyz]);
+                        int temp = Math.abs((int) Math.floor((uVec[xyz] * (imageCenter - i) + vVec[xyz] * (imageCenter - j) - volumeCenter[2]) / viewVec[xyz]));
                         if (temp < maxZIndex){
                             maxZIndex = temp;
                         }
@@ -140,7 +182,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                         pixelCoord[xyz] = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * k + volumeCenter[xyz];     
                     }
                     
-                    int tempVal = getVoxel(pixelCoord);
+                    int tempVal = getTriLinear(pixelCoord);
                     if (tempVal > val){
                         val = tempVal;
                     }
