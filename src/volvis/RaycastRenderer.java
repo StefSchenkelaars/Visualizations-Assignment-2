@@ -229,7 +229,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 int maxZIndex = Integer.MAX_VALUE;
                 for(int xyz = 0; xyz <= 2; xyz++) {
                     if (viewVec[xyz] != 0.0) {
-                        int temp = (int) Math.floor((uVec[xyz] * (imageCenter - i) + vVec[xyz] * (imageCenter - j) - volumeCenter[2]) / viewVec[xyz]);
+                        int temp = Math.abs((int) Math.floor((uVec[xyz] * (imageCenter - i) + vVec[xyz] * (imageCenter - j) - volumeCenter[2]) / viewVec[xyz]));
                         if (temp < maxZIndex) {
                             maxZIndex = temp;
                         }
