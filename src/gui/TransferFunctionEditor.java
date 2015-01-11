@@ -112,7 +112,7 @@ public class TransferFunctionEditor extends javax.swing.JPanel {
             .add(0, 100, Short.MAX_VALUE)
         );
 
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel5.setText("<html>Scalar value &rarr;</html>");
 
         jLabel6.setText("<html>&uarr;</html>");
@@ -122,7 +122,7 @@ public class TransferFunctionEditor extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap()
+                .add(6, 6, 6)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -148,7 +148,7 @@ public class TransferFunctionEditor extends javax.swing.JPanel {
                             .add(layout.createSequentialGroup()
                                 .add(6, 6, 6)
                                 .add(jLabel5)
-                                .addContainerGap())))))
+                                .add(0, 0, 0))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -156,7 +156,7 @@ public class TransferFunctionEditor extends javax.swing.JPanel {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(histogramPanel, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .add(0, 0, 0)
                         .add(jLabel6, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                         .add(5, 5, 5)
                         .add(jLabel4)))

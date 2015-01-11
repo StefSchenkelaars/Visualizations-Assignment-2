@@ -60,6 +60,7 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         renderingSpeedLabel = new javax.swing.JLabel();
         tfPanel = new javax.swing.JPanel();
         castTypeList = new javax.swing.JComboBox();
+        jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         resolutionLabel = new javax.swing.JLabel();
 
@@ -75,7 +76,7 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
         );
         tfPanelLayout.setVerticalGroup(
             tfPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 308, Short.MAX_VALUE)
+            .addGap(0, 312, Short.MAX_VALUE)
         );
 
         castTypeList.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "MIP", "Slicer", "Compositing" }));
@@ -86,7 +87,9 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel2.setText("Resolution:");
+        jLabel3.setText("Rendering method:");
+
+        jLabel2.setText(", resolution (px):");
 
         resolutionLabel.setText("resolutionLabel");
 
@@ -99,30 +102,33 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(renderingSpeedLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(0, 0, 0)
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(resolutionLabel)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(resolutionLabel)))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(renderingSpeedLabel)
-                    .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(castTypeList, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(renderingSpeedLabel)
                     .addComponent(jLabel2)
                     .addComponent(resolutionLabel))
-                .addGap(10, 10, 10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(tfPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -135,6 +141,7 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox castTypeList;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel renderingSpeedLabel;
     private javax.swing.JLabel resolutionLabel;
     private javax.swing.JPanel tfPanel;

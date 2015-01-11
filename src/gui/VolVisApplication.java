@@ -64,6 +64,7 @@ public class VolVisApplication extends javax.swing.JFrame {
         renderPanel = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setLocation(new java.awt.Point(0, 0));
 
         splitPane.setBorder(null);
         splitPane.setDividerLocation(600);
@@ -89,26 +90,26 @@ public class VolVisApplication extends javax.swing.JFrame {
             loadVolumeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loadVolumeLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(loadVolumeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1)
-                    .addGroup(loadVolumeLayout.createSequentialGroup()
-                        .addComponent(loadButton)
-                        .addGap(0, 275, Short.MAX_VALUE)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 397, Short.MAX_VALUE)
                 .addContainerGap())
+            .addGroup(loadVolumeLayout.createSequentialGroup()
+                .addComponent(loadButton)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         loadVolumeLayout.setVerticalGroup(
             loadVolumeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(loadVolumeLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(loadButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         tabbedPanel.addTab("Load", loadVolume);
 
         splitPane.setRightComponent(tabbedPanel);
+        tabbedPanel.getAccessibleContext().setAccessibleName("Data");
 
         renderPanel.setPreferredSize(new java.awt.Dimension(598, 546));
 
@@ -133,7 +134,7 @@ public class VolVisApplication extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
 
         pack();
