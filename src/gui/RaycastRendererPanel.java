@@ -107,7 +107,11 @@ public class RaycastRendererPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void castTypeListActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_castTypeListActionPerformed
+<<<<<<< HEAD
         // TODO add your handling code here:
+=======
+        this.renderer.changed();
+>>>>>>> bc22d15... Selection listener added
     }//GEN-LAST:event_castTypeListActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
