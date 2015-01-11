@@ -127,14 +127,23 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
         }
     }
     
+    private void setPixel(int x, int y, int pixelColor, int resolution){
+        for (int i = x; i < x + resolution; i++){
+            for (int j = y; j < y + resolution; j++){
+                // Check if pixel still inside image, prevent out of bounds
+                if (i < image.getWidth() && j < image.getHeight() ){
+                    image.setRGB(i, j, pixelColor);
+                }
+            }
+        }
+    }
+    
     private int toARGB(int alpha, int red, int green, int blue){
         return (alpha << 24) | (red << 16) | (green << 8) | blue;
     }
     
-    void mip(double[] viewMatrix) {
+    void mip(double[] viewMatrix, int resolution) {
 
-        clearImage();
-        
         // vector uVec and vVec define a plane through the origin, 
         // perpendicular to the view vector viewVec
         double[] viewVec = new double[3];
@@ -153,8 +162,8 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 
         // sample on a plane through the origin of the volume data
         double max = volume.getMaximum();
-        for (int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
+        for (int j = 0; j < image.getHeight(); j += resolution) {
+            for (int i = 0; i < image.getWidth(); i += resolution) {
                 
                 // Default value is 0
                 int val = 0;
@@ -171,13 +180,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                     }
                 }
                 
-//                System.out.println("Zindex: " + maxZIndex);
-//                for(int xyz = 0; xyz <= 2; xyz++){
-//                    double weg = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * maxZIndex + volumeCenter[xyz];
-//                    System.out.println("Coord: " + xyz + " : " + weg);
-//                }
-                
-                for (int k = - maxZIndex; k < maxZIndex; k += 10) {
+                for (int k = - maxZIndex; k < maxZIndex; k++) {
                     for(int xyz = 0; xyz <= 2; xyz++){
                         pixelCoord[xyz] = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * k + volumeCenter[xyz];     
                     }
@@ -193,16 +196,14 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 
                 // BufferedImage expects a pixel color packed as ARGB in an int
                 int pixelColor = toARGB(255, val, val, val);
-                image.setRGB(i, j, pixelColor);
+                setPixel(i,j,pixelColor,resolution);
             }
         }
 
 
     }
     
-    void compositing(double[] viewMatrix) {
-        
-        clearImage();
+    void compositing(double[] viewMatrix, int resolution) {
         
         // vector uVec and vVec define a plane through the origin, 
         // perpendicular to the view vector viewVec
@@ -222,8 +223,8 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 
         // sample on a plane through the origin of the volume data
         double max = volume.getMaximum();
-        for (int j = 0; j < image.getHeight(); j++) {
-            for (int i = 0; i < image.getWidth(); i++) {
+        for (int j = 0; j < image.getHeight(); j += resolution) {
+            for (int i = 0; i < image.getWidth(); i += resolution) {
                 
                 // Calculate where the volume stops
                 int maxZIndex = Integer.MAX_VALUE;
@@ -268,15 +269,13 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 int c_green = d_green <= 1.0 ? (int) Math.floor(d_green * 255) : 255;
                 int c_blue = d_blue <= 1.0 ? (int) Math.floor(d_blue * 255) : 255;
                 int pixelColor = toARGB(c_alpha, c_red, c_green, c_blue);
-                image.setRGB(i, j, pixelColor);
+                setPixel(i,j,pixelColor,resolution);
             }
         }
         
     }
     
     void slicer(double[] viewMatrix) {
-
-        clearImage();
 
         // vector uVec and vVec define a plane through the origin, 
         // perpendicular to the view vector viewVec
@@ -396,20 +395,32 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
 
         long startTime = System.currentTimeMillis();
         
+        clearImage();
+        // Resolution is the number of pixels that have the same value
+        // If resolution is 3, a square of (3x3) pixels have the same value
+        int resolution = 1;
         String castType = panel.getCastType();
         if (castType == "Slicer"){
             slicer(viewMatrix);
         } else if (castType == "MIP"){
-            mip(viewMatrix);
+            // Set resolution dependent on if currently moving
+            resolution = this.interactiveMode ? 3 : 1;
+            mip(viewMatrix, resolution);
         } else if (castType == "Compositing"){
-            compositing(viewMatrix);
+            // Set resolution dependent on if currently moving
+            resolution = this.interactiveMode ? 2 : 1;
+            compositing(viewMatrix, resolution);
         }
         
-        
+  
         long endTime = System.currentTimeMillis();
         double runningTime = (endTime - startTime);
+        
+        // Set info on panel
         panel.setSpeedLabel(Double.toString(runningTime));
-
+        int xResolution = image.getWidth() / resolution;
+        int yResolution = image.getHeight() / resolution;
+        panel.setResolutionLabel(Integer.toString(xResolution) + " x " + Integer.toString(yResolution));
         Texture texture = AWTTextureIO.newTexture(gl.getGLProfile(), image, false);
 
         gl.glPushAttrib(GL2.GL_LIGHTING_BIT);
