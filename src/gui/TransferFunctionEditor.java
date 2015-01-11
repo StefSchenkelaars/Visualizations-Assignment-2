@@ -94,7 +94,7 @@ public class TransferFunctionEditor extends javax.swing.JPanel {
 
         jLabel4.setText("Opacity");
 
-        colorButton.setText("    ");
+        colorButton.setText("Set");
         colorButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 colorButtonActionPerformed(evt);

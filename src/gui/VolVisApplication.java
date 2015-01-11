@@ -8,6 +8,8 @@ import java.awt.BorderLayout;
 import java.io.File;
 import javax.media.opengl.awt.GLCanvas;
 import javax.swing.JFileChooser;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.filechooser.FileFilter;
 import volume.Volume;
 import volvis.RaycastRenderer;
@@ -63,7 +65,13 @@ public class VolVisApplication extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        splitPane.setBorder(null);
         splitPane.setDividerLocation(600);
+        splitPane.setPreferredSize(new java.awt.Dimension(1039, 550));
+
+        tabbedPanel.setAlignmentX(0.0F);
+        tabbedPanel.setAlignmentY(0.0F);
+        tabbedPanel.setPreferredSize(new java.awt.Dimension(428, 546));
 
         loadButton.setText("Load volume");
         loadButton.addActionListener(new java.awt.event.ActionListener() {
@@ -85,7 +93,7 @@ public class VolVisApplication extends javax.swing.JFrame {
                     .addComponent(jScrollPane1)
                     .addGroup(loadVolumeLayout.createSequentialGroup()
                         .addComponent(loadButton)
-                        .addGap(0, 265, Short.MAX_VALUE)))
+                        .addGap(0, 275, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         loadVolumeLayout.setVerticalGroup(
@@ -94,13 +102,15 @@ public class VolVisApplication extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(loadButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 421, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 455, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
         tabbedPanel.addTab("Load", loadVolume);
 
         splitPane.setRightComponent(tabbedPanel);
+
+        renderPanel.setPreferredSize(new java.awt.Dimension(598, 546));
 
         javax.swing.GroupLayout renderPanelLayout = new javax.swing.GroupLayout(renderPanel);
         renderPanel.setLayout(renderPanelLayout);
@@ -110,7 +120,7 @@ public class VolVisApplication extends javax.swing.JFrame {
         );
         renderPanelLayout.setVerticalGroup(
             renderPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 520, Short.MAX_VALUE)
+            .addGap(0, 554, Short.MAX_VALUE)
         );
 
         splitPane.setLeftComponent(renderPanel);
@@ -119,13 +129,11 @@ public class VolVisApplication extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(splitPane)
-                .addContainerGap())
+            .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(splitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 524, Short.MAX_VALUE)
+            .addComponent(splitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 554, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -161,7 +169,7 @@ public class VolVisApplication extends javax.swing.JFrame {
                 
                 String infoText = new String("Volume data info:\n");
                 infoText = infoText.concat(file.getName() + "\n");
-                infoText = infoText.concat("dimensions:\t\t" + volume.getDimX() + " x " + volume.getDimY() + " x " + volume.getDimZ() + "\n");
+                infoText = infoText.concat("dimensions:\t" + volume.getDimX() + " x " + volume.getDimY() + " x " + volume.getDimZ() + "\n");
                 infoText = infoText.concat("voxel value range:\t" + volume.getMinimum() + " - " + volume.getMaximum());
                 infoTextPane.setText(infoText);
                 raycastRenderer.setVolume(volume);
@@ -176,24 +184,21 @@ public class VolVisApplication extends javax.swing.JFrame {
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(VolVisApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(VolVisApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(VolVisApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(VolVisApplication.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            // Set System L&F
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } 
+        catch (UnsupportedLookAndFeelException e) {
+           // handle exception
+        }
+        catch (ClassNotFoundException e) {
+           // handle exception
+        }
+        catch (InstantiationException e) {
+           // handle exception
+        }
+        catch (IllegalAccessException e) {
+           // handle exception
         }
         //</editor-fold>
 

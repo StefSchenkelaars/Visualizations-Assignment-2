@@ -10,7 +10,6 @@ import gui.RaycastRendererPanel;
 import gui.TransferFunctionEditor;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.List;
 import javax.media.opengl.GL2;
 import util.TFChangeListener;
 import util.VectorMath;
@@ -241,7 +240,7 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 ArrayList<TFColor> colors = new ArrayList<TFColor>();
                 
                 // Loop through the viewVector
-                for (int k = - maxZIndex; k < maxZIndex; k += 10) {
+                for (int k = maxZIndex; k > -maxZIndex; k -= 10) {
                     for(int xyz = 0; xyz <= 2; xyz++) {
                         pixelCoord[xyz] = uVec[xyz] * (i - imageCenter) + vVec[xyz] * (j - imageCenter) + viewVec[xyz] * k + volumeCenter[xyz];     
                     }
@@ -254,21 +253,20 @@ public class RaycastRenderer extends Renderer implements TFChangeListener {
                 // Calculate mean of colors array
                 double d_alpha = 0.0, d_red = 0.0, d_green = 0.0, d_blue = 0.0;
                 if (colors.size() > 0) {
-                    ArrayList<Double> alphas = new ArrayList<Double>();
-                    alphas.add(1.0 - colors.get(0).a);
-                    for (int l = 1; l < colors.size(); l++) {
-                        alphas.add((1.0 - colors.get(l).a) * alphas.get(l - 1));
-                    }
-                    d_alpha = 1.0 - alphas.get(alphas.size() - 1);
-
+                    d_alpha = 1.0 - colors.get(0).a;
                     d_red = colors.get(0).r;
                     d_green = colors.get(0).g;
                     d_blue = colors.get(0).b;
+                    
                     for (int l = 1; l < colors.size(); l++) {
-                        d_red += colors.get(l).r * alphas.get(l - 1);
-                        d_green += colors.get(l).g * alphas.get(l - 1);
-                        d_blue += colors.get(l).b * alphas.get(l - 1);
+                        d_red += colors.get(l).r * d_alpha;
+                        d_green += colors.get(l).g * d_alpha;
+                        d_blue += colors.get(l).b * d_alpha;
+                        
+                        d_alpha = (1.0 - colors.get(l).a) * d_alpha;
                     }
+                    
+                    d_alpha = 1.0 - d_alpha;
                 }
                 
                 // Convert double value to color int
